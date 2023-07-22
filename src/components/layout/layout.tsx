@@ -8,8 +8,8 @@ const Header = dynamic(() => import('@/components/header'), {
 
 function Layout({
   seo = {
-    title: 'todo',
-    description: 'todo',
+    title: 'Nights',
+    description: 'Nights',
     keywords: ['Walid Behlock'],
   },
   children = null,

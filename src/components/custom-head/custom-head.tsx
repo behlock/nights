@@ -2,8 +2,8 @@ import { NextSeo } from 'next-seo'
 import NextHead from 'next/head'
 
 function CustomHead({
-  title = 'todo',
-  image = { url: 'https://todo/behlockxyz.svg' },
+  title = 'Nights',
+  image = { url: 'https://Nights/behlockxyz.svg' },
   description = 'personal space',
   keywords = [] as string[],
 }) {
