@@ -1,10 +1,4 @@
-import dynamic from 'next/dynamic'
-
 import CustomHead from '@/components/custom-head'
-
-const Header = dynamic(() => import('@/components/header'), {
-  ssr: false,
-})
 
 function Layout({
   seo = {
@@ -17,8 +11,7 @@ function Layout({
   return (
     <>
       <CustomHead {...seo} />
-      <div className="flex bg-neutral-900 p-5">
-        <Header />
+      <div>
         <main>{children}</main>
       </div>
     </>
