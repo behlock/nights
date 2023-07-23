@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { Night, NightsRequestOptions, NightsResponse } from '@/models/night'
 import { fetchGraphQL } from '@/lib/graphql'
 
@@ -29,9 +29,29 @@ const nightsReducer = (state: any = initialState, action: any) => {
   }
 }
 
+// Custom middleware for caching
+const cacheMiddleware = (store) => (next) => (action) => {
+  if (action.type === 'REQUEST_NIGHTS') {
+    const cachedData = localStorage.getItem('cachedData')
+    if (cachedData && cachedData !== 'undefined') {
+      // If data is in cache, dispatch the cached data to the store
+      store.dispatch({ type: 'RECEIVE_NIGHTS', data: JSON.parse(cachedData) })
+    } else {
+      // If data is not in cache, proceed with the API call and caching
+      next(action)
+    }
+  } else if (action.type === 'RECEIVE_NIGHTS') {
+    // Save data to cache after a successful API call
+    localStorage.setItem('cachedData', JSON.stringify(action.data))
+  } else {
+    next(action)
+  }
+}
+
 export const store = configureStore({
   reducer: nightsReducer,
   preloadedState: initialState,
+  // middleware: [cacheMiddleware],
 })
 
 const requestNights = () => ({

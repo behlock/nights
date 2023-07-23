@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import PropTypes from 'prop-types'
-
 import { Provider, useDispatch, useSelector } from 'react-redux'
+import { ScaleLoader } from 'react-spinners'
 
 import { DataTable } from '@/components/ui/data-table'
 import { fetchNights, store } from '@/components/nights-table/store'
@@ -20,11 +20,9 @@ const NightsTable: React.FC = (props: any) => {
   return (
     <>
       {isLoading ? (
-        <div className="text-center">Loading...</div>
+        <ScaleLoader className="text-center" color="#000000" />
       ) : (
-        <div className="container mx-auto">
-          <DataTable columns={columns} data={nights} handleRowClick={handleRowClick} handleRowClickAccessor='raId' />
-        </div>
+        <DataTable columns={columns} data={nights} handleRowClick={handleRowClick} handleRowClickAccessor="raId" />
       )}
     </>
   )
@@ -37,7 +35,7 @@ NightsTable.propTypes = {
 
 const NightsTableWithProvider = (props: any) => (
   <Provider store={store}>
-   {/* @ts-ignore */}
+    {/* @ts-ignore */}
     <NightsTable graphqlUrl={props.graphqlUrl} options={props.options} />
   </Provider>
 )
