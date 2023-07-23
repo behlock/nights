@@ -1,58 +1,59 @@
 export interface NightImage {
-  night_image_id: number
+  nightImageId: number
   url: string
 }
 
 export interface Country {
-  country_id: number
-  ra_id: number
+  countryId: number
+  raId: number
   name: string
-  url_code: string
+  urlCode: string
 }
 
 export interface Area {
-  area_id: number
-  ra_id: number
+  areaId: number
+  raId: number
   name: string
   country: Country
 }
 
 export interface Venue {
-  venue_id: number
-  ra_id: number
+  venueId: number
+  raId: number
   name: string
   address?: string
   area?: Area
 }
 
 export interface Ticket {
-  ticket_id: number
+  ticketId: number
   title: string
   price: string
-  on_sale_from?: Date
-  valid_type: string
+  onSaleFrom?: Date
+  // TODO: outline possible options
+  validType: string
 }
 
 export interface Promoter {
-  promoter_id: number
-  ra_id: number
+  promoterId: number
+  raId: number
   name: string
 }
 
 export interface Artist {
-  artist_id: number
-  ra_id: number
+  artistId: number
+  raId: number
   name: string
 }
 
 export interface Night {
-  night_id: number
-  ra_id: number
+  nightId: number
+  raId: number
   title: string
   date: Date
   content?: string
-  start_time: Date
-  end_time: Date
+  startTime: Date
+  endTime: Date
   images: NightImage[]
   venue?: Venue
   tickets: Ticket[]
@@ -62,9 +63,9 @@ export interface Night {
 
 export interface NightsResponse {
   nights: Night[]
-  total_count: number
+  totalCount: number
 }
 
 export interface NightsRequestOptions {
-  area_ids?: number[]
+  areaIds?: number[]
 }
