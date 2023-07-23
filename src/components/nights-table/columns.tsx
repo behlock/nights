@@ -37,9 +37,10 @@ export const columns: ColumnDef<Night>[] = [
     // @ts-ignore
     cell: ({ row }) =>
       cell(
+        // @ts-ignore
         row
           .getValue('artists')
-          .map((artist) => artist.name)
+          .map((artist: any) => artist.name)
           .join(', ')
       ),
   },
