@@ -30,6 +30,7 @@ const nightsReducer = (state: any = initialState, action: any) => {
 }
 
 // Custom middleware for caching
+// @ts-ignore
 const cacheMiddleware = (store) => (next) => (action) => {
   if (action.type === 'REQUEST_NIGHTS') {
     const cachedData = localStorage.getItem('cachedData')
