@@ -22,7 +22,7 @@ const NightsTable: React.FC = (props: any) => {
       {isLoading ? (
         <div className="text-center">Loading...</div>
       ) : (
-        <div className="container mx-auto py-10">
+        <div className="container mx-auto">
           <DataTable columns={columns} data={nights} handleRowClick={handleRowClick} handleRowClickAccessor='raId' />
         </div>
       )}

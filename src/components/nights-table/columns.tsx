@@ -1,51 +1,24 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
-
-// export const columns: ColumnDef<Night>[] = [
-//   {
-//     accessorKey: 'title',
-//     header: 'Title',
-//   },
-//   {
-//     accessorKey: 'date',
-//     header: 'Date',
-//   },
-//   {
-//     accessorKey: 'content',
-//     header: 'Content',
-//   },
-//   {
-//     accessorKey: 'venue',
-//     header: 'Venue',
-//   },
-//   {
-//     accessorKey: 'artists',
-//     header: 'Artists',
-//   },
-//   {
-//     accessorKey: 'start_time',
-//     header: 'Start Time',
-//   },
-//   {
-//     accessorKey: 'end_time',
-//     header: 'End Time',
-//   },
-//   {
-//     accessorKey: 'image',
-//     header: 'Thumbnail',
-//   },
-// ]
+import { ArrowUpDown } from 'lucide-react'
 
 import { Night } from '@/models/night'
 import { Button } from '@/components/ui/button'
+import { dateToDateString, dateToTimeString, relativeDateFromToday } from '@/lib/date'
 
-const header = (column: any, content: string) => (
-  <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+const headerWithSorting = (column: any, content: string) => (
+  <Button className="text-black" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
     {content}
     <ArrowUpDown className="ml-2 h-4 w-4" />
   </Button>
 )
+
+const header = (column: any, content: string) => <div className="font-small text-left text-black">{content}</div>
+
 const cell = (content: string) => <div className="font-small text-left">{content}</div>
+
+const formatDate = (date: Date, start_time: Date, end_time: Date) => {
+  return `${dateToDateString(date)} (${relativeDateFromToday(date)}) ${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`
+}
 
 export const columns: ColumnDef<Night>[] = [
   {
@@ -59,35 +32,30 @@ export const columns: ColumnDef<Night>[] = [
     cell: ({ row }) => cell(row.getValue('content')),
   },
   {
-    accessorKey: 'date',
-    header: ({ column }) => header(column, 'Date'),
+    accessorKey: 'artists',
+    header: ({ column }) => header(column, 'Artists'),
     // @ts-ignore
-    cell: ({ row }) => cell(row.getValue('date').toString()),
+    cell: ({ row }) =>
+      cell(
+        row
+          .getValue('artists')
+          .map((artist) => artist.name)
+          .join(', ')
+      ),
   },
   {
     accessorKey: 'venue',
     header: ({ column }) => header(column, 'Venue'),
     // @ts-ignore
-    cell: ({ row }) => cell(row.getValue('venue').name),
+    cell: ({ row }) => cell(row.getValue('venue')?.name),
   },
   {
-    accessorKey: 'artists',
-    header: ({ column }) => header(column, 'Artists'),
+    accessorKey: 'date',
+    header: ({ column }) => headerWithSorting(column, 'Date'),
     // @ts-ignore
-    cell: ({ row }) => cell(row.getValue('artists').map((artist) => artist.name).join(', ')),
-    
-  },
-  {
-    accessorKey: 'start_time',
-    header: ({ column }) => header(column, 'Start Time'),
-    // @ts-ignore
-    cell: ({ row }) => cell(row.getValue('start_time').toString()),
-  },
-  {
-    accessorKey: 'end_time',
-    header: ({ column }) => header(column, 'End Time'),
-    // @ts-ignore
-    cell: ({ row }) => cell(row.getValue('end_time').toString()),
+    cell: ({ row }) =>
+      cell(formatDate(row.getValue('date'), new Date(row.original.startTime), new Date(row.original.endTime))),
+    // cell: ({ row }) => console.log(row),
   },
 ]
 

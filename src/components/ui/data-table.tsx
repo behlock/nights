@@ -1,5 +1,3 @@
-'use client'
-
 import { ColumnDef, flexRender, ColumnFiltersState, getFilteredRowModel, getCoreRowModel, useReactTable, getPaginationRowModel, SortingState, getSortedRowModel} from '@tanstack/react-table'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -39,7 +37,7 @@ export function DataTable<TData, TValue>({ columns, data, handleRowClick, handle
   return (
     <div>
             <div className="flex items-center py-4">
-              {/* TODO */}
+              {/* TODO: smart search */}
         <Input
           placeholder="Search"
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
