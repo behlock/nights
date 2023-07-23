@@ -12,7 +12,7 @@ function Layout({
     <>
       <CustomHead {...seo} />
       <div>
-        <main>{children}</main>
+        <main className="p-8">{children}</main>
       </div>
     </>
   )

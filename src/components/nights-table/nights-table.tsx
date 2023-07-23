@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider, useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 
 import {
   Table,
@@ -74,6 +75,7 @@ const columns: Column[] = [
   { id: 'artists', label: 'Artists', minWidth: 170 },
   { id: 'start_time', label: 'Start Time', minWidth: 170 },
   { id: 'end_time', label: 'End Time', minWidth: 170 },
+  // { id: 'image', label: 'Thumbnail', minWidth: 200 },
 ]
 
 const formatNight = (data: any) => {
@@ -135,6 +137,9 @@ const NightsTable: React.FC = () => {
             artists {
               name
             }
+            images {
+              url
+            }
           }
         }
     }
@@ -164,7 +169,7 @@ const NightsTable: React.FC = () => {
       <TableHeader>
         <TableRow>
           {columns.map((column) => (
-            <TableHead key={column.id} className="w-[100px]">
+            <TableHead key={column.id} className="w-[100px] text-black">
               {column.label}
             </TableHead>
           ))}
@@ -184,7 +189,8 @@ const NightsTable: React.FC = () => {
             <TableBody>
               {nights.map((night: Night, index: number) => {
                 return (
-                  <TableRow key={night.night_id} data-testid={index} onClick={() => handleRowClick(night.raId)}>
+                  <TableRow 
+                    key={night.night_id} data-testid={index} onClick={() => handleRowClick(night.raId)} className='cursor-pointer'>
                     <TableCell>{night.title}</TableCell>
                     <TableCell>{night.date.toString()}</TableCell>
                     <TableCell>{night.content}</TableCell>
@@ -192,6 +198,7 @@ const NightsTable: React.FC = () => {
                     <TableCell>{night.artists.map((artist) => artist.name).join(", ")}</TableCell>
                     <TableCell>{night.start_time.toString()}</TableCell>
                     <TableCell>{night.end_time.toString()}</TableCell>
+                    {/* <TableCell><Image className="h-40" src={night.images[0].url} alt="flyer-front" width={580} height={326} /></TableCell> */}
 
                   </TableRow>
                 )
