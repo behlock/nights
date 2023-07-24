@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button'
 import { dateToDateString, dateToTimeString, relativeDateFromToday } from '@/lib/date'
 
 const headerWithSorting = (column: any, content: string) => (
-  <Button className="text-black" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+  <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
     {content}
     <ArrowUpDown className="ml-2 h-4 w-4" />
   </Button>
 )
 
-const header = (column: any, content: string) => <div className="font-small text-left text-black">{content}</div>
+const header = (column: any, content: string) => <div className="font-small text-left">{content}</div>
 
 const cell = (content: string) => <div className="font-small text-left">{content}</div>
 

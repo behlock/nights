@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { BounceLoader } from 'react-spinners'
 
 import { DataTable } from '@/components/ui/data-table'
 import { fetchNights, persistor, store } from '@/components/nights-table/store'
@@ -25,9 +24,7 @@ const NightsTable: React.FC = (props: any) => {
   return (
     <>
       {isLoading ? (
-        <div className="flex justify-center align-middle">
-          <BounceLoader color="#000000" />
-        </div>
+        <div className="mr-8 mt-4 flex justify-center align-middle font-semibold text-primary">[loading...]</div>
       ) : (
         <DataTable
           columns={columns}

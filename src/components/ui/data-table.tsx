@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import * as React from 'react'
+import * as JsSearch from 'js-search'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -50,10 +51,23 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  // TODO: smart search
+  // let [searchQuery, setSearchQuery] = React.useState('')
+
+  // let search = new JsSearch.Search('title')
+  // // search.addIndex('title')
+  // // search.addIndex(['genres', 'name'])
+  // // search.addIndex(['artists', 'name'])
+  // search.addIndex(['venue', 'name'])
+  // // search.addIndex(['venue', 'area', 'name'])
+  // // search.addIndex('date')
+
+  // search.addDocuments(data)
+
   return (
     <div>
       <div className="flex flex-row items-center justify-end py-4">
-        <RefreshCw className="cursor-pointer mr-4 h-4 w-4 text-gray-600" onClick={onRefreshClick} />
+        <RefreshCw className="mr-4 h-4 w-4 cursor-pointer text-muted-foreground" onClick={onRefreshClick} />
         {/* TODO: smart search */}
         <Input
           placeholder="Search"
