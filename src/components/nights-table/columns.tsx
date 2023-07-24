@@ -16,20 +16,18 @@ const header = (column: any, content: string) => <div className="font-small text
 
 const cell = (content: string) => <div className="font-small text-left">{content}</div>
 
-const formatDate = (date: Date, start_time: Date, end_time: Date) => {
-  return `${dateToDateString(date)} (${relativeDateFromToday(date)}) ${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`
-}
+const dateCell = (mainDate: Date, start_time: Date, end_time: Date) => (
+  <div className="font-small text-left flex flex-col space-y-1 whitespace-nowrap">
+    <text>{dateToDateString(mainDate)}</text> <text>({relativeDateFromToday(mainDate)})</text><text> {`${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`}</text>
+  </div>
+)
+
 
 export const columns: ColumnDef<Night>[] = [
   {
     accessorKey: 'title',
     header: ({ column }) => header(column, 'Title'),
     cell: ({ row }) => cell(row.getValue('title')),
-  },
-  {
-    accessorKey: 'content',
-    header: ({ column }) => header(column, 'Content'),
-    cell: ({ row }) => cell(row.getValue('content')),
   },
   {
     accessorKey: 'artists',
@@ -55,9 +53,13 @@ export const columns: ColumnDef<Night>[] = [
     header: ({ column }) => headerWithSorting(column, 'Date'),
     // @ts-ignore
     cell: ({ row }) =>
-      cell(formatDate(row.getValue('date'), new Date(row.original.startTime), new Date(row.original.endTime))),
-    // cell: ({ row }) => console.log(row),
+    dateCell(row.getValue('date'), new Date(row.original.startTime), new Date(row.original.endTime)),
   },
+    {
+      accessorKey: 'content',
+      header: ({ column }) => header(column, 'Content'),
+      cell: ({ row }) => cell(row.getValue('content')),
+    },
 ]
 
 export const handleRowClick = (raId: number) => {
