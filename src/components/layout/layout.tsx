@@ -1,4 +1,5 @@
 import CustomHead from '@/components/custom-head'
+import ThemeProvider from '@/components/theme-provider'
 
 function Layout({
   seo = {
@@ -11,9 +12,9 @@ function Layout({
   return (
     <>
       <CustomHead {...seo} />
-      <div>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <main className="p-8">{children}</main>
-      </div>
+      </ThemeProvider>
     </>
   )
 }

@@ -1,7 +1,12 @@
+import ThemeToggle from "@/components/theme-toggle"
+
 const Header = () => {
   return (
-    <header>
-      <h1 className="font-bold text-center pb-4">[Nights]</h1>
+    <header className="flex flex-row items-center">
+      <div className="flex-grow text-center">
+      <h1 className="font-bold">[nights]</h1>
+      </div>
+      <ThemeToggle />
     </header>
   )
 }
