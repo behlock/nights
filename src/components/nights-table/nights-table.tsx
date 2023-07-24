@@ -7,10 +7,18 @@ import * as React from 'react'
 import * as JsSearch from 'js-search'
 
 import { DataTable } from '@/components/ui/data-table'
-import { fetchNights, filterNights, persistor, setSearchQuery, store } from '@/components/nights-table/store'
+import {
+  fetchNights,
+  filterNights,
+  persistor,
+  setSearchQuery,
+  setSelectedGenres,
+  store,
+} from '@/components/nights-table/store'
 import { columns, handleRowClick } from '@/components/nights-table/columns'
 import { Input } from '@/components/ui/input'
 import DropdownCheckboxes from '@/components/dropdown-checkboxes'
+import { Genre, Night } from '@/models/night'
 
 const NightsTable: React.FC = (props: any) => {
   const { graphqlUrl, options } = props
@@ -44,6 +52,18 @@ const NightsTable: React.FC = (props: any) => {
     }
   }, [searchQuery])
 
+  useEffect(() => {
+    if (selectedGenres.length > 0) {
+      dispatch(
+        filterNights(nights.filter((night: Night) => night.genres.some((genre) => selectedGenres.includes(genre.name))))
+      )
+    } else {
+      dispatch(filterNights(nights))
+    }
+  }, [selectedGenres])
+
+  let genres = new Set((nights.map((night: Night) => night.genres).flat() as any).map((genre: Genre) => genre.name))
+
   return (
     <>
       {isLoading ? (
@@ -51,6 +71,23 @@ const NightsTable: React.FC = (props: any) => {
       ) : (
         <>
           <div className="flex flex-row items-center justify-end py-4">
+            <DropdownCheckboxes
+              // @ts-ignore
+              items={Array.from(genres.values()).map((genre) => ({
+                label: genre,
+                checked: selectedGenres.includes(genre),
+                onCheckedChange: (checked: any) => {
+                  if (checked) {
+                    dispatch(setSelectedGenres([...selectedGenres, genre]))
+                  } else {
+                    dispatch(
+                      setSelectedGenres(selectedGenres.filter((selectedGenre: Genre) => selectedGenre !== genre))
+                    )
+                  }
+                },
+              }))}
+            />
+
             <RefreshCw
               className="mr-4 h-4 w-4 cursor-pointer text-muted-foreground"
               onClick={() => fetchNights(dispatch, options, graphqlUrl)}

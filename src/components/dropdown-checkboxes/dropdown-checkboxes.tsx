@@ -19,16 +19,21 @@ export function DropdownCheckboxes(
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">Open</Button>
+        <Button variant="outline" className="mr-4">
+          Genres
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Appearance</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {items.map((item) => (
-          <DropdownMenuCheckboxItem key={item.label} checked={item.checked} onCheckedChange={item.onCheckedChange}>
-            {item.label}
-          </DropdownMenuCheckboxItem>
-        ))}
+        {/* ! TECHDEBT */}
+
+        {
+          // @ts-ignore
+          items.items.map((item) => (
+            <DropdownMenuCheckboxItem key={item.label} checked={item.checked} onCheckedChange={item.onCheckedChange}>
+              {item.label}
+            </DropdownMenuCheckboxItem>
+          ))
+        }
       </DropdownMenuContent>
     </DropdownMenu>
   )
