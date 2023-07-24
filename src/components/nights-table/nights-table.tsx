@@ -29,7 +29,13 @@ const NightsTable: React.FC = (props: any) => {
           <BounceLoader color="#000000" />
         </div>
       ) : (
-        <DataTable columns={columns} data={nights} handleRowClick={handleRowClick} handleRowClickAccessor="raId" />
+        <DataTable
+          columns={columns}
+          data={nights}
+          handleRowClick={handleRowClick}
+          handleRowClickAccessor="raId"
+          onRefreshClick={() => fetchNights(dispatch, options, graphqlUrl)}
+        />
       )}
     </>
   )
