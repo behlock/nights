@@ -17,11 +17,11 @@ const header = (column: any, content: string) => <div className="font-small text
 const cell = (content: string) => <div className="font-small text-left">{content}</div>
 
 const dateCell = (mainDate: Date, start_time: Date, end_time: Date) => (
-  <div className="font-small text-left flex flex-col space-y-1 whitespace-nowrap">
-    <span>{dateToDateString(mainDate)}</span> <span>({relativeDateFromToday(mainDate)})</span><span> {`${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`}</span>
+  <div className="font-small flex flex-col space-y-1 whitespace-nowrap text-left">
+    <span>{dateToDateString(mainDate)}</span> <span>({relativeDateFromToday(mainDate)})</span>
+    <span> {`${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`}</span>
   </div>
 )
-
 
 export const columns: ColumnDef<Night>[] = [
   {
@@ -43,6 +43,19 @@ export const columns: ColumnDef<Night>[] = [
       ),
   },
   {
+    accessorKey: 'genres',
+    header: ({ column }) => header(column, 'Genres'),
+    // @ts-ignore
+    cell: ({ row }) =>
+      cell(
+        // @ts-ignore
+        row
+          .getValue('genres')
+          .map((genre: any) => genre.name)
+          .join(', ')
+      ),
+  },
+  {
     accessorKey: 'venue',
     header: ({ column }) => header(column, 'Venue'),
     // @ts-ignore
@@ -53,13 +66,13 @@ export const columns: ColumnDef<Night>[] = [
     header: ({ column }) => headerWithSorting(column, 'Date'),
     // @ts-ignore
     cell: ({ row }) =>
-    dateCell(new Date(row.getValue('date')), new Date(row.original.startTime), new Date(row.original.endTime)),
+      dateCell(new Date(row.getValue('date')), new Date(row.original.startTime), new Date(row.original.endTime)),
   },
-    {
-      accessorKey: 'content',
-      header: ({ column }) => header(column, 'Content'),
-      cell: ({ row }) => cell(row.getValue('content')),
-    },
+  {
+    accessorKey: 'content',
+    header: ({ column }) => header(column, 'Content'),
+    cell: ({ row }) => cell(row.getValue('content')),
+  },
 ]
 
 export const handleRowClick = (raId: number) => {

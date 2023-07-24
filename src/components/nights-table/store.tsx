@@ -90,6 +90,9 @@ export const fetchNights = (dispatch: any, options: NightsRequestOptions, endpoi
           images {
             url
           }
+          genres {
+            name
+          }
         }
       }
   }

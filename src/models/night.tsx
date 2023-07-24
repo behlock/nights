@@ -46,6 +46,12 @@ export interface Artist {
   name: string
 }
 
+export interface Genre {
+  genreId: number
+  raId: number
+  name: string
+}
+
 export interface Night {
   nightId: number
   raId: number
@@ -59,6 +65,7 @@ export interface Night {
   tickets: Ticket[]
   promoters: Promoter[]
   artists: Artist[]
+  genres: Genre[]
 }
 
 export interface NightsResponse {
