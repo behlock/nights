@@ -70,7 +70,6 @@ export interface Night {
 
 export interface NightsResponse {
   nights: Night[]
-  totalCount: number
 }
 
 export interface NightsRequestOptions {

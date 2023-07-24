@@ -10,16 +10,33 @@ export const initialState = {
   nights: [],
   totalCount: 0,
   isLoading: false,
+  selectedGenres: [],
+  searchQuery: '',
+  filteredNights: [],
 }
 
 const requestNights = () => ({
   type: 'REQUEST_NIGHTS',
 })
 
-const receivedNights = (data: NightsResponse, options: NightsRequestOptions) => ({
+const receivedNights = (data: NightsResponse) => ({
   type: 'RECEIVE_NIGHTS',
   data,
-  options,
+})
+
+export const setSelectedGenres = (selectedGenres: string[]) => ({
+  type: 'SET_SELECTED_GENRES',
+  selectedGenres,
+})
+
+export const setSearchQuery = (searchQuery: string) => ({
+  type: 'SET_SEARCH_QUERY',
+  searchQuery,
+})
+
+export const filterNights = (filteredNights: any) => ({
+  type: 'FILTER_NIGHTS',
+  filteredNights,
 })
 
 const nightsReducer = (state: any = initialState, action: any) => {
@@ -34,8 +51,26 @@ const nightsReducer = (state: any = initialState, action: any) => {
       return {
         ...state,
         nights: action.data.nights,
-        totalCount: action.data.total_count,
+        filteredNights: action.data.nights,
         isLoading: false,
+      }
+
+    case 'SET_SELECTED_GENRES':
+      return {
+        ...state,
+        selectedGenres: action.selectedGenres,
+      }
+
+    case 'SET_SEARCH_QUERY':
+      return {
+        ...state,
+        searchQuery: action.searchQuery,
+      }
+
+    case 'FILTER_NIGHTS':
+      return {
+        ...state,
+        filteredNights: action.filteredNights,
       }
 
     default:
@@ -102,7 +137,6 @@ export const fetchNights = (dispatch: any, options: NightsRequestOptions, endpoi
       const formattedNights = data.nights.nights.map((nightJson: any) => formatNight(nightJson))
       return {
         nights: formattedNights,
-        total_count: data.nights.totalCount,
       }
     })
     // @ts-ignore
