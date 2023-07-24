@@ -69,3 +69,12 @@ export interface NightsResponse {
 export interface NightsRequestOptions {
   areaIds?: number[]
 }
+
+export const formatNight = (nightJson: any): Night => {
+  return {
+    ...nightJson,
+    date: new Date(nightJson.date),
+    start_time: new Date(nightJson.startTime),
+    end_time: new Date(nightJson.endTime),
+  }
+}

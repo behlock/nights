@@ -18,7 +18,7 @@ const cell = (content: string) => <div className="font-small text-left">{content
 
 const dateCell = (mainDate: Date, start_time: Date, end_time: Date) => (
   <div className="font-small text-left flex flex-col space-y-1 whitespace-nowrap">
-    <text>{dateToDateString(mainDate)}</text> <text>({relativeDateFromToday(mainDate)})</text><text> {`${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`}</text>
+    <span>{dateToDateString(mainDate)}</span> <span>({relativeDateFromToday(mainDate)})</span><span> {`${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`}</span>
   </div>
 )
 
@@ -53,7 +53,7 @@ export const columns: ColumnDef<Night>[] = [
     header: ({ column }) => headerWithSorting(column, 'Date'),
     // @ts-ignore
     cell: ({ row }) =>
-    dateCell(row.getValue('date'), new Date(row.original.startTime), new Date(row.original.endTime)),
+    dateCell(new Date(row.getValue('date')), new Date(row.original.startTime), new Date(row.original.endTime)),
   },
     {
       accessorKey: 'content',

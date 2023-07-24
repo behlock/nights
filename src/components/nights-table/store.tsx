@@ -1,12 +1,26 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { Night, NightsRequestOptions, NightsResponse } from '@/models/night'
+import { configureStore } from '@reduxjs/toolkit'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+
+import { NightsRequestOptions, NightsResponse, formatNight } from '@/models/night'
 import { fetchGraphQL } from '@/lib/graphql'
 
+// REDUX STORE SETUP
 export const initialState = {
   nights: [],
   totalCount: 0,
   isLoading: false,
 }
+
+const requestNights = () => ({
+  type: 'REQUEST_NIGHTS',
+})
+
+const receivedNights = (data: NightsResponse, options: NightsRequestOptions) => ({
+  type: 'RECEIVE_NIGHTS',
+  data,
+  options,
+})
 
 const nightsReducer = (state: any = initialState, action: any) => {
   switch (action.type) {
@@ -29,51 +43,21 @@ const nightsReducer = (state: any = initialState, action: any) => {
   }
 }
 
-// Custom middleware for caching
-// @ts-ignore
-const cacheMiddleware = (store) => (next) => (action) => {
-  if (action.type === 'REQUEST_NIGHTS') {
-    const cachedData = localStorage.getItem('cachedData')
-    if (cachedData && cachedData !== 'undefined') {
-      // If data is in cache, dispatch the cached data to the store
-      store.dispatch({ type: 'RECEIVE_NIGHTS', data: JSON.parse(cachedData) })
-    } else {
-      // If data is not in cache, proceed with the API call and caching
-      next(action)
-    }
-  } else if (action.type === 'RECEIVE_NIGHTS') {
-    // Save data to cache after a successful API call
-    localStorage.setItem('cachedData', JSON.stringify(action.data))
-  } else {
-    next(action)
-  }
+const persistConfig = {
+  key: 'root',
+  storage: storage,
 }
 
-export const store = configureStore({
-  reducer: nightsReducer,
+const persistedReducer = persistReducer(persistConfig, nightsReducer)
+
+export let store = configureStore({
+  reducer: persistedReducer,
   preloadedState: initialState,
-  // middleware: [cacheMiddleware],
 })
 
-const requestNights = () => ({
-  type: 'REQUEST_NIGHTS',
-})
+export let persistor = persistStore(store)
 
-const receivedNights = (data: NightsResponse, options: NightsRequestOptions) => ({
-  type: 'RECEIVE_NIGHTS',
-  data,
-  options,
-})
-
-const formatNight = (nightJson: any): Night => {
-  return {
-    ...nightJson,
-    date: new Date(nightJson.date),
-    start_time: new Date(nightJson.startTime),
-    end_time: new Date(nightJson.endTime),
-  }
-}
-
+// REDUX ACTIONS
 export const fetchNights = (dispatch: any, options: NightsRequestOptions, endpoint: string) => {
   dispatch(requestNights())
 
