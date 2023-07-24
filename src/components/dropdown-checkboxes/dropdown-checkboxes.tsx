@@ -28,10 +28,13 @@ export function DropdownCheckboxes(
 
         {
           // @ts-ignore
-          items.items.map((item) => (
-            <DropdownMenuCheckboxItem key={item.label} checked={item.checked} onCheckedChange={item.onCheckedChange}>
-              {item.label}
-            </DropdownMenuCheckboxItem>
+          items.items.map((item, index) => (
+            <>
+              <DropdownMenuCheckboxItem key={item.label} checked={item.checked} onCheckedChange={item.onCheckedChange}>
+                {item.label}
+              </DropdownMenuCheckboxItem>
+              {index == 1 && <DropdownMenuSeparator />}
+            </>
           ))
         }
       </DropdownMenuContent>

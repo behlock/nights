@@ -53,12 +53,12 @@ const NightsTable: React.FC = (props: any) => {
   }, [searchQuery])
 
   useEffect(() => {
-    if (selectedGenres.length > 0) {
+    if (selectedGenres.length == genres.size) {
+      dispatch(filterNights(nights))
+    } else {
       dispatch(
         filterNights(nights.filter((night: Night) => night.genres.some((genre) => selectedGenres.includes(genre.name))))
       )
-    } else {
-      dispatch(filterNights(nights))
     }
   }, [selectedGenres])
 
@@ -73,19 +73,43 @@ const NightsTable: React.FC = (props: any) => {
           <div className="flex flex-row items-center justify-end py-4">
             <DropdownCheckboxes
               // @ts-ignore
-              items={Array.from(genres.values()).map((genre) => ({
-                label: genre,
-                checked: selectedGenres.includes(genre),
-                onCheckedChange: (checked: any) => {
-                  if (checked) {
-                    dispatch(setSelectedGenres([...selectedGenres, genre]))
-                  } else {
-                    dispatch(
-                      setSelectedGenres(selectedGenres.filter((selectedGenre: Genre) => selectedGenre !== genre))
-                    )
-                  }
-                },
-              }))}
+              items={(
+                [
+                  {
+                    label: 'None',
+                    checked: selectedGenres.length === 0,
+                    onCheckedChange: (checked: any) => {
+                      if (checked) {
+                        dispatch(setSelectedGenres([]))
+                      }
+                    },
+                  },
+                  {
+                    label: 'All',
+                    checked: selectedGenres.length === genres.size,
+                    onCheckedChange: (checked: any) => {
+                      if (checked) {
+                        // @ts-ignore
+                        dispatch(setSelectedGenres(Array.from(genres.values())))
+                      }
+                    },
+                  },
+                ] as any
+              ).concat(
+                Array.from(genres.values()).map((genre) => ({
+                  label: genre,
+                  checked: selectedGenres.includes(genre),
+                  onCheckedChange: (checked: any) => {
+                    if (checked) {
+                      dispatch(setSelectedGenres([...selectedGenres, genre]))
+                    } else {
+                      dispatch(
+                        setSelectedGenres(selectedGenres.filter((selectedGenre: Genre) => selectedGenre !== genre))
+                      )
+                    }
+                  },
+                }))
+              )}
             />
 
             <RefreshCw
