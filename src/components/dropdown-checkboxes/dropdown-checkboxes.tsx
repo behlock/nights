@@ -14,13 +14,20 @@ import {
 type Checked = DropdownMenuCheckboxItemProps['checked']
 
 export function DropdownCheckboxes(
-  items: { label: string; checked: Checked; onCheckedChange: (checked: Checked) => void }[]
+  props: React.PropsWithChildren<{
+    triggerLabel: string
+    items: {
+      label: string
+      checked: Checked
+      onCheckedChange: (checked: Checked) => void
+    }[]
+  }>
 ) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="mr-4">
-          Genres
+          {props.triggerLabel}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -28,7 +35,7 @@ export function DropdownCheckboxes(
 
         {
           // @ts-ignore
-          items.items.map((item, index) => (
+          props.items.map((item, index) => (
             <>
               <DropdownMenuCheckboxItem key={item.label} checked={item.checked} onCheckedChange={item.onCheckedChange}>
                 {item.label}

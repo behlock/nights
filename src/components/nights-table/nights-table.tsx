@@ -13,18 +13,21 @@ import {
   persistor,
   setSearchQuery,
   setSelectedGenres,
+  setSelectedVenues,
   store,
 } from '@/components/nights-table/store'
 import { columns, handleRowClick } from '@/components/nights-table/columns'
 import { Input } from '@/components/ui/input'
 import DropdownCheckboxes from '@/components/dropdown-checkboxes'
-import { Genre, Night } from '@/models/night'
+import { Genre, Night, Venue } from '@/models/night'
 
 const NightsTable: React.FC = (props: any) => {
   const { graphqlUrl, options } = props
 
   // @ts-ignore
-  let { nights, filteredNights, isLoading, selectedGenres, searchQuery } = useSelector((state) => ({ ...state }))
+  let { nights, filteredNights, isLoading, selectedGenres, selectedVenues, searchQuery } = useSelector((state) => ({
+    ...state,
+  }))
 
   const dispatch = useDispatch()
 
@@ -62,7 +65,16 @@ const NightsTable: React.FC = (props: any) => {
     }
   }, [selectedGenres])
 
+  useEffect(() => {
+    if (selectedVenues.length == genres.size) {
+      dispatch(filterNights(nights))
+    } else {
+      dispatch(filterNights(nights.filter((night: Night) => selectedVenues.includes(night.venue?.name))))
+    }
+  }, [selectedVenues])
+
   let genres = new Set((nights.map((night: Night) => night.genres).flat() as any).map((genre: Genre) => genre.name))
+  let venues = new Set(nights.map((night: Night) => night.venue?.name))
 
   return (
     <>
@@ -73,6 +85,7 @@ const NightsTable: React.FC = (props: any) => {
           <div className="flex flex-row items-center justify-end py-4">
             <DropdownCheckboxes
               // @ts-ignore
+              triggerLabel={'Genres'}
               items={(
                 [
                   {
@@ -105,6 +118,47 @@ const NightsTable: React.FC = (props: any) => {
                     } else {
                       dispatch(
                         setSelectedGenres(selectedGenres.filter((selectedGenre: Genre) => selectedGenre !== genre))
+                      )
+                    }
+                  },
+                }))
+              )}
+            />
+            <DropdownCheckboxes
+              // @ts-ignore
+              triggerLabel="Venues"
+              items={(
+                [
+                  {
+                    label: 'None',
+                    checked: selectedVenues.length === 0,
+                    onCheckedChange: (checked: any) => {
+                      if (checked) {
+                        dispatch(setSelectedVenues([]))
+                      }
+                    },
+                  },
+                  {
+                    label: 'All',
+                    checked: selectedVenues.length === venues.size,
+                    onCheckedChange: (checked: any) => {
+                      if (checked) {
+                        // @ts-ignore
+                        dispatch(setSelectedVenues(Array.from(venues.values())))
+                      }
+                    },
+                  },
+                ] as any
+              ).concat(
+                Array.from(venues.values()).map((venue) => ({
+                  label: venue,
+                  checked: selectedVenues.includes(venue),
+                  onCheckedChange: (checked: any) => {
+                    if (checked) {
+                      dispatch(setSelectedVenues([...selectedVenues, venue]))
+                    } else {
+                      dispatch(
+                        setSelectedVenues(selectedVenues.filter((selectedVenue: Venue) => selectedVenue !== venue))
                       )
                     }
                   },

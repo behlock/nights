@@ -11,6 +11,7 @@ export const initialState = {
   totalCount: 0,
   isLoading: false,
   selectedGenres: [],
+  selectedVenues: [],
   searchQuery: '',
   filteredNights: [],
 }
@@ -27,6 +28,11 @@ const receivedNights = (data: NightsResponse) => ({
 export const setSelectedGenres = (selectedGenres: string[]) => ({
   type: 'SET_SELECTED_GENRES',
   selectedGenres,
+})
+
+export const setSelectedVenues = (selectedVenues: string[]) => ({
+  type: 'SET_SELECTED_VENUES',
+  selectedVenues,
 })
 
 export const setSearchQuery = (searchQuery: string) => ({
@@ -59,6 +65,12 @@ const nightsReducer = (state: any = initialState, action: any) => {
       return {
         ...state,
         selectedGenres: action.selectedGenres,
+      }
+
+    case 'SET_SELECTED_VENUES':
+      return {
+        ...state,
+        selectedVenues: action.selectedVenues,
       }
 
     case 'SET_SEARCH_QUERY':
