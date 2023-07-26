@@ -2,7 +2,8 @@ import Header from '@/components/header'
 import Layout from '@/components/layout'
 import NightsTable from '@/components/nights-table'
 
-const NIGHTS_ENDPOINT = 'http://localhost:8000/graphql'
+// const NIGHTS_ENDPOINT = 'http://localhost:5002/graphql'
+const NIGHTS_ENDPOINT = 'https://nightsretrieval-production.up.railway.app/graphql'
 
 const Home = () => (
   // @ts-ignore
