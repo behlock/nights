@@ -173,7 +173,7 @@ const NightsTable: React.FC = (props: any) => {
               className="max-w-sm"
             />
             <RefreshCw
-              className="mr-4 h-4 w-4 cursor-pointer text-muted-foreground"
+              className="ml-4 mr-2 h-4 w-4 cursor-pointer text-muted-foreground"
               onClick={() => fetchNights(dispatch, options, graphqlUrl)}
             />
           </div>
