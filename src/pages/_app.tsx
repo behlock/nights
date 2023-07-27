@@ -2,8 +2,6 @@ import Script from 'next/script'
 
 import '@/styles/global.scss'
 
-require('dotenv').config()
-
 // @ts-ignore
 function MyApp({ Component, pageProps }) {
   return (
