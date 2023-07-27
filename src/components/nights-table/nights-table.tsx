@@ -5,13 +5,14 @@ import * as React from 'react'
 
 import { DataTable } from '@/components/ui/data-table'
 import { persistor, store } from '@/components/nights-table/store'
-import { columns, handleRowClick } from '@/components/nights-table/columns'
+import { columns } from '@/components/nights-table/columns'
+import { handleNightClick } from '@/utils/ra'
 
 const NightsTable: React.FC = (props: any) => (
   <DataTable
     columns={columns}
     data={props.filteredNights}
-    handleRowClick={handleRowClick}
+    handleRowClick={handleNightClick}
     handleRowClickAccessor="raId"
   />
 )

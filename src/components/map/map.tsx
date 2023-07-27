@@ -1,30 +1,49 @@
-import { useEffect } from 'react';
-import mapboxgl from 'mapbox-gl';
+import ReactMapGL, { Marker } from 'react-map-gl'
+
+import { config } from '@/utils/config'
+import Pin from '@/components/map/pin'
+import { useState } from 'react'
+import { handleNightClick } from '@/utils/ra'
 
 interface MapProps {
-  center: [number, number];
+  markers: {
+    latitude: number
+    longitude: number
+    raId: number
+  }[]
 }
 
-const Map: React.FC<MapProps> = ({ center }) => {
-  useEffect(() => {
-    // Set Mapbox access token
-    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || '';
+const Map: React.FC<MapProps> = ({ markers }) => {
+  return (
+    <div>
+      <style jsx global>{`
+        .mapboxgl-ctrl-attrib-inner {
+          display: none;
+        }
+      `}</style>
+      <ReactMapGL
+        style={{ width: '100%', height: '80vh' }}
+        initialViewState={{
+          latitude: 51.5074,
+          longitude: -0.1278,
+          zoom: 10,
+        }}
+        mapboxAccessToken={config.MAPBOX_ACCESS_TOKEN}
+        mapStyle="mapbox://styles/behlock/cljr22vwz011s01pjgtfedqtc"
+        onRender={(event) => event.target.resize()}
+      >
+        {markers.map((marker, index) => (
+          <Marker key={index} longitude={marker.longitude} latitude={marker.latitude}>
+            <Pin 
+              size={20}
+              onClick={handleNightClick}  
+              raId={marker.raId}
+              />
+          </Marker>
+        ))}
+      </ReactMapGL>
+    </div>
+  )
+}
 
-    // Create a new map instance
-    const map = new mapboxgl.Map({
-      container: 'map', // The HTML container element ID where the map will be displayed
-      style: 'mapbox://styles/mapbox/streets-v11', // The map style URL
-      center: center, // The initial center of the map [longitude, latitude]
-      zoom: 12, // Initial zoom level
-    });
-
-    // Add map controls, markers, layers, etc. as needed
-
-    // Clean up on component unmount
-    return () => map.remove();
-  }, [center]);
-
-  return <div id="map" style={{ width: '100%', height: '400px' }} />;
-};
-
-export default Map;
+export default Map

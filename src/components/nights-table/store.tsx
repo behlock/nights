@@ -3,7 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { NightsRequestOptions, NightsResponse, formatNight } from '@/models/night'
-import { fetchGraphQL } from '@/lib/graphql'
+import { fetchGraphQL } from '@/utils/graphql'
 
 // REDUX STORE SETUP
 export const initialState = {
@@ -13,6 +13,7 @@ export const initialState = {
   selectedVenues: [],
   searchQuery: '',
   filteredNights: [],
+  view: 'table',
 }
 
 const requestNights = () => ({
@@ -22,6 +23,14 @@ const requestNights = () => ({
 const receivedNights = (data: NightsResponse) => ({
   type: 'RECEIVE_NIGHTS',
   data,
+})
+
+export const setMapView = () => ({
+  type: 'SET_MAP_VIEW',
+})
+
+export const setTableView = () => ({
+  type: 'SET_TABLE_VIEW',
 })
 
 export const setSelectedGenres = (selectedGenres: string[]) => ({
@@ -58,6 +67,18 @@ const nightsReducer = (state: any = initialState, action: any) => {
         nights: action.data.nights,
         filteredNights: action.data.nights,
         isLoading: false,
+      }
+
+    case 'SET_MAP_VIEW':
+      return {
+        ...state,
+        view: 'map',
+      }
+
+    case 'SET_TABLE_VIEW':
+      return {
+        ...state,
+        view: 'table',
       }
 
     case 'SET_SELECTED_GENRES':
@@ -144,8 +165,8 @@ export const fetchNights = (dispatch: any, options: NightsRequestOptions, endpoi
   }
     `
   )
-    .then((data) => {
-      const formattedNights = data.nights.nights.map((nightJson: any) => formatNight(nightJson))
+    .then(async (data) => {
+      const formattedNights = await Promise.all(data.nights.nights.map((nightJson: any) => formatNight(nightJson)))
       return {
         nights: formattedNights,
       }

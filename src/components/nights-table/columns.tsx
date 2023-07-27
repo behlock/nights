@@ -3,7 +3,7 @@ import { ArrowUpDown } from 'lucide-react'
 
 import { Night } from '@/models/night'
 import { Button } from '@/components/ui/button'
-import { dateToDateString, dateToTimeString, relativeDateFromToday } from '@/lib/date'
+import { dateToDateString, dateToTimeString, relativeDateFromToday } from '@/utils/date'
 
 const headerWithSorting = (column: any, content: string) => (
   <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -16,10 +16,10 @@ const header = (column: any, content: string) => <div className="font-small text
 
 const cell = (content: string) => <div className="font-small text-left">{content}</div>
 
-const dateCell = (mainDate: Date, start_time: Date, end_time: Date) => (
+const dateCell = (mainDate: Date, startTime: Date, endTime: Date) => (
   <div className="font-small flex flex-col space-y-1 whitespace-nowrap text-left">
     <span>{dateToDateString(mainDate)}</span> <span>({relativeDateFromToday(mainDate)})</span>
-    <span> {`${dateToTimeString(start_time)} - ${dateToTimeString(end_time)}`}</span>
+    <span> {`${dateToTimeString(startTime)} - ${dateToTimeString(endTime)}`}</span>
   </div>
 )
 
@@ -74,7 +74,3 @@ export const columns: ColumnDef<Night>[] = [
     cell: ({ row }) => cell(row.getValue('content')),
   },
 ]
-
-export const handleRowClick = (raId: number) => {
-  window.open(`https://ra.co/events/${raId}`, '_blank')
-}
