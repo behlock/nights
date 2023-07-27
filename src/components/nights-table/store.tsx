@@ -8,7 +8,6 @@ import { fetchGraphQL } from '@/lib/graphql'
 // REDUX STORE SETUP
 export const initialState = {
   nights: [],
-  totalCount: 0,
   isLoading: false,
   selectedGenres: [],
   selectedVenues: [],

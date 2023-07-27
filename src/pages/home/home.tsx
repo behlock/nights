@@ -1,9 +1,7 @@
 import Header from '@/components/header'
 import Layout from '@/components/layout'
 import NightsTable from '@/components/nights-table'
-
-// const NIGHTS_ENDPOINT = 'http://localhost:5002/graphql'
-const NIGHTS_ENDPOINT = 'https://nightsretrieval-production.up.railway.app/graphql'
+import { GRAPHQL_URL } from '@/lib/config'
 
 const Home = () => (
   // @ts-ignore
@@ -11,7 +9,7 @@ const Home = () => (
     {/* @ts-ignore */}
     <Header />
     <NightsTable
-      graphqlUrl={NIGHTS_ENDPOINT}
+      graphqlUrl={GRAPHQL_URL}
       options={{
         area_ids: [13],
       }}
