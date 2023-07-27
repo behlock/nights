@@ -1,9 +1,8 @@
 import ReactMapGL, { Marker } from 'react-map-gl'
 
-import { config } from '@/utils/config'
 import Pin from '@/components/map/pin'
-import { useState } from 'react'
 import { handleNightClick } from '@/utils/ra'
+import { config } from '@/utils/config'
 
 interface MapProps {
   markers: {
