@@ -165,16 +165,15 @@ const NightsTable: React.FC = (props: any) => {
                 }))
               )}
             />
-
+            <RefreshCw
+              className="mr-4 h-4 w-4 cursor-pointer text-muted-foreground"
+              onClick={() => fetchNights(dispatch, options, graphqlUrl)}
+            />
             <Input
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => dispatch(setSearchQuery(e.target.value))}
               className="max-w-sm"
-            />
-            <RefreshCw
-              className="ml-4 mr-2 h-4 w-4 cursor-pointer text-muted-foreground"
-              onClick={() => fetchNights(dispatch, options, graphqlUrl)}
             />
           </div>
           <DataTable
