@@ -1,14 +1,14 @@
-const MAPBOX_API_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+const MAPBOX_BATCH_GEOCODING_API_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places-permanent/';
 
-interface GeoCoords {
+export interface GeoCoords {
   latitude: number;
   longitude: number;
 }
 
-const getGeoCoordsFromAddress = async (address: string, accessToken: string): Promise<GeoCoords> => {
+const getGeoCoordsFromAddresses = async (addresses: string[], accessToken: string): Promise<GeoCoords[]> => {
   try {
-    const encodedAddress = encodeURIComponent(address);
-    const response = await fetch(`${MAPBOX_API_BASE_URL}${encodedAddress}.json?access_token=${accessToken}`);
+    const encodedAddresses = addresses.map((address) => encodeURIComponent(address)).join(';');
+    const response = await fetch(`${MAPBOX_BATCH_GEOCODING_API_URL}${encodedAddresses}.json?access_token=${accessToken}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch location data.');
@@ -17,14 +17,17 @@ const getGeoCoordsFromAddress = async (address: string, accessToken: string): Pr
     const data = await response.json();
 
     if (data && data.features && data.features.length > 0) {
-      const [longitude, latitude] = data.features[0].center;
-      return { latitude, longitude };
+      const geoCoordsList: GeoCoords[] = data.features.map((feature: any) => {
+        const [longitude, latitude] = feature.center;
+        return { latitude, longitude };
+      });
+      return geoCoordsList;
     } else {
-      throw new Error('Location not found.');
+      throw new Error('Location(s) not found.');
     }
   } catch (error) {
     throw new Error('Error fetching location coordinates.');
   }
 };
 
-export default getGeoCoordsFromAddress;
+export default getGeoCoordsFromAddresses;

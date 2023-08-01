@@ -1,4 +1,4 @@
-import getGeoCoordsFromAddress from '@/utils/geocode'
+import getGeoCoordsFromAddresses, { GeoCoords } from '@/utils/geocode'
 import { config } from '@/utils/config'
 
 export interface NightImage {
@@ -83,32 +83,29 @@ export interface NightsRequestOptions {
   areaIds?: number[]
 }
 
-const convertPhysicalAddressToCoords = async (address: string) => {
+export const convertPhysicalAddressesToCoords = async (
+  addresses: string[]
+): Promise<{ [address: string]: GeoCoords }> => {
   try {
-    const geoCoords = await getGeoCoordsFromAddress(address, config.MAPBOX_ACCESS_TOKEN)
-    return geoCoords
+    const geoCoordsList = await getGeoCoordsFromAddresses(addresses, config.MAPBOX_ACCESS_TOKEN)
+    const result: { [address: string]: GeoCoords } = {}
+
+    for (let i = 0; i < addresses.length; i++) {
+      result[addresses[i]] = geoCoordsList[i]
+    }
+
+    return result
   } catch (error: any) {
     console.error(error.message)
+    return {}
   }
 }
 
-export const formatNight = async (nightJson: any): Promise<Night> => {
-  const coords = await convertPhysicalAddressToCoords(nightJson.venue?.address)
-
+export const formatNight = (nightJson: any): Night => {
   return {
     ...nightJson,
     date: new Date(nightJson.date),
     startTime: new Date(nightJson.startTime),
     endTime: new Date(nightJson.endTime),
-    venue: {
-      ...nightJson.venue,
-      coordinates: coords,
-      area: {
-        ...nightJson.venue?.area,
-        country: {
-          ...nightJson.venue?.area?.country,
-        },
-      },
-    },
   }
 }

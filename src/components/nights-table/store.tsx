@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { NightsRequestOptions, NightsResponse, formatNight } from '@/models/night'
+import { NightsRequestOptions, NightsResponse, convertPhysicalAddressesToCoords, formatNight } from '@/models/night'
 import { fetchGraphQL } from '@/utils/graphql'
 
 // REDUX STORE SETUP
@@ -166,7 +166,20 @@ export const fetchNights = (dispatch: any, options: NightsRequestOptions, endpoi
     `
   )
     .then(async (data) => {
-      const formattedNights = await Promise.all(data.nights.nights.map((nightJson: any) => formatNight(nightJson)))
+      const coords = await convertPhysicalAddressesToCoords(
+        data.nights.nights.map((nightJson: any) => nightJson.venue?.address)
+      )
+
+      const formattedNights = data.nights.nights
+        .map((nightJson: any) => ({
+          ...nightJson,
+          venue: {
+            ...nightJson.venue,
+            coords: coords[nightJson.venue?.address],
+          },
+        }))
+        .map((nightJson: any) => formatNight(nightJson))
+
       return {
         nights: formattedNights,
       }
