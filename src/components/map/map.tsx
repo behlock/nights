@@ -1,4 +1,5 @@
 import ReactMapGL, { Marker } from 'react-map-gl'
+import { useTheme } from 'next-themes'
 
 import Pin from '@/components/map/pin'
 import { handleNightClick } from '@/utils/ra'
@@ -13,6 +14,9 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ markers }) => {
+  const { theme } = useTheme()
+  const mapStyle = theme === 'dark' ? config.MAPBOX_MAP_STYLE_DARK : config.MAPBOX_MAP_STYLE_LIGHT
+
   return (
     <div>
       <style jsx global>{`
@@ -28,16 +32,12 @@ const Map: React.FC<MapProps> = ({ markers }) => {
           zoom: 10,
         }}
         mapboxAccessToken={config.MAPBOX_ACCESS_TOKEN}
-        mapStyle="mapbox://styles/behlock/cljr22vwz011s01pjgtfedqtc"
+        mapStyle={mapStyle}
         onRender={(event) => event.target.resize()}
       >
         {markers.map((marker, index) => (
           <Marker key={index} longitude={marker.longitude} latitude={marker.latitude}>
-            <Pin 
-              size={20}
-              onClick={handleNightClick}  
-              raId={marker.raId}
-              />
+            <Pin size={20} color={theme === 'dark' ? '#000' : '#fff'} onClick={handleNightClick} raId={marker.raId} />
           </Marker>
         ))}
       </ReactMapGL>

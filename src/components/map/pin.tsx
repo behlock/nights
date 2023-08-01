@@ -4,17 +4,17 @@ const ICON = `M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,
 
 const pinStyle = {
   cursor: 'pointer',
-  fill: 'black',
   stroke: 'none',
 }
 
-const Pin = ({ size, onClick, raId }: any) => {
+const Pin = ({ size, color, onClick, raId }: any) => {
   return (
     <svg
       height={size}
       viewBox="0 0 24 24"
       style={{
         ...pinStyle,
+        fill: color,
         transform: `translate(${-size / 2}px,${-size}px)`,
       }}
       onClick={() => onClick(raId)}
