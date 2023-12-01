@@ -3,4 +3,4 @@
 
 ### [nights]
 
-Sane way to explore music events happening around.
+Sane way to explore music events happening around
