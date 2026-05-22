@@ -1,30 +1,20 @@
-const MAPBOX_API_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
-
 interface GeoCoords {
-  latitude: number;
-  longitude: number;
+  latitude: number
+  longitude: number
 }
 
-const getGeoCoordsFromAddress = async (address: string, accessToken: string): Promise<GeoCoords> => {
-  try {
-    const encodedAddress = encodeURIComponent(address);
-    const response = await fetch(`${MAPBOX_API_BASE_URL}${encodedAddress}.json?access_token=${accessToken}`);
+const getGeoCoordsFromAddress = async (address: string): Promise<GeoCoords | undefined> => {
+  if (!address || !address.trim()) return undefined
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch location data.');
-    }
+  const base = typeof window === 'undefined' ? process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' : ''
+  const response = await fetch(`${base}/api/geocode?address=${encodeURIComponent(address)}`)
 
-    const data = await response.json();
+  if (!response.ok) return undefined
 
-    if (data && data.features && data.features.length > 0) {
-      const [longitude, latitude] = data.features[0].center;
-      return { latitude, longitude };
-    } else {
-      throw new Error('Location not found.');
-    }
-  } catch (error) {
-    throw new Error('Error fetching location coordinates.');
-  }
-};
+  const data = (await response.json()) as Partial<GeoCoords>
+  if (typeof data.latitude !== 'number' || typeof data.longitude !== 'number') return undefined
 
-export default getGeoCoordsFromAddress;
+  return { latitude: data.latitude, longitude: data.longitude }
+}
+
+export default getGeoCoordsFromAddress

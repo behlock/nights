@@ -68,8 +68,9 @@ export function DataTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    // @ts-ignore
-                    onClick={() => handleRowClick(cell.row.original[handleRowClickAccessor])}
+                    onClick={() =>
+                      handleRowClick((cell.row.original as Record<string, unknown>)[handleRowClickAccessor])
+                    }
                     className="cursor-pointer"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

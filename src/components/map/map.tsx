@@ -1,4 +1,4 @@
-import ReactMapGL, { Marker } from 'react-map-gl'
+import { Map as ReactMapGL, Marker, type MapEvent } from 'react-map-gl/mapbox'
 import { useTheme } from 'next-themes'
 
 import Pin from '@/components/map/pin'
@@ -33,7 +33,7 @@ const Map: React.FC<MapProps> = ({ markers }) => {
         }}
         mapboxAccessToken={config.MAPBOX_ACCESS_TOKEN}
         mapStyle={mapStyle}
-        onRender={(event) => event.target.resize()}
+        onRender={(event: MapEvent) => event.target.resize()}
       >
         {markers.map((marker, index) => (
           <Marker key={index} longitude={marker.longitude} latitude={marker.latitude}>

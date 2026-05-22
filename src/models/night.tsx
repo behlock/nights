@@ -1,5 +1,4 @@
 import getGeoCoordsFromAddress from '@/utils/geocode'
-import { config } from '@/utils/config'
 
 export interface NightImage {
   nightImageId: number
@@ -83,20 +82,22 @@ export interface NightsRequestOptions {
   areaIds?: number[]
 }
 
-const convertPhysicalAddressToCoords = async (address: string) => {
+const convertPhysicalAddressToCoords = async (address: string | undefined) => {
+  if (!address) return undefined
   try {
-    const geoCoords = await getGeoCoordsFromAddress(address, config.MAPBOX_ACCESS_TOKEN)
-    return geoCoords
-  } catch (error: any) {
-    console.error(error.message)
+    return await getGeoCoordsFromAddress(address)
+  } catch (error) {
+    console.error('geocode failure:', error)
+    return undefined
   }
 }
 
-export const formatNight = async (nightJson: any): Promise<Night> => {
+export const formatNight = async (input: unknown): Promise<Night> => {
+  const nightJson = input as Record<string, any>
   const coords = await convertPhysicalAddressToCoords(nightJson.venue?.address)
 
   return {
-    ...nightJson,
+    ...(nightJson as Night),
     date: new Date(nightJson.date),
     startTime: new Date(nightJson.startTime),
     endTime: new Date(nightJson.endTime),
