@@ -1,20 +1,20 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, Column } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
-import { Night } from '@/models/night'
+import type { Artist, Genre, Night } from '@/models/night'
 import { Button } from '@/components/ui/button'
 import { dateToDateString, dateToTimeString, relativeDateFromToday } from '@/utils/date'
 
-const headerWithSorting = (column: any, content: string) => (
+const headerWithSorting = (column: Column<Night, unknown>, content: string) => (
   <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
     {content}
     <ArrowUpDown className="ml-2 h-4 w-4" />
   </Button>
 )
 
-const header = (column: any, content: string) => <div className="font-small text-left">{content}</div>
+const header = (content: string) => <div className="font-small text-left">{content}</div>
 
-const cell = (content: string) => <div className="font-small text-left">{content}</div>
+const cell = (content: string | undefined) => <div className="font-small text-left">{content ?? ''}</div>
 
 const dateCell = (mainDate: Date, startTime: Date, endTime: Date) => (
   <div className="font-small flex flex-col space-y-1 whitespace-nowrap text-left">
@@ -26,51 +26,33 @@ const dateCell = (mainDate: Date, startTime: Date, endTime: Date) => (
 export const columns: ColumnDef<Night>[] = [
   {
     accessorKey: 'title',
-    header: ({ column }) => header(column, 'Title'),
-    cell: ({ row }) => cell(row.getValue('title')),
+    header: () => header('Title'),
+    cell: ({ row }) => cell(row.getValue<string>('title')),
   },
   {
     accessorKey: 'artists',
-    header: ({ column }) => header(column, 'Artists'),
-    // @ts-ignore
-    cell: ({ row }) =>
-      cell(
-        // @ts-ignore
-        row
-          .getValue('artists')
-          .map((artist: any) => artist.name)
-          .join(', ')
-      ),
+    header: () => header('Artists'),
+    cell: ({ row }) => cell((row.getValue<Artist[]>('artists') ?? []).map((a) => a.name).join(', ')),
   },
   {
     accessorKey: 'genres',
-    header: ({ column }) => header(column, 'Genres'),
-    // @ts-ignore
-    cell: ({ row }) =>
-      cell(
-        // @ts-ignore
-        row
-          .getValue('genres')
-          .map((genre: any) => genre.name)
-          .join(', ')
-      ),
+    header: () => header('Genres'),
+    cell: ({ row }) => cell((row.getValue<Genre[]>('genres') ?? []).map((g) => g.name).join(', ')),
   },
   {
     accessorKey: 'venue',
-    header: ({ column }) => header(column, 'Venue'),
-    // @ts-ignore
-    cell: ({ row }) => cell(row.getValue('venue')?.name),
+    header: () => header('Venue'),
+    cell: ({ row }) => cell(row.getValue<Night['venue']>('venue')?.name),
   },
   {
     accessorKey: 'date',
     header: ({ column }) => headerWithSorting(column, 'Date'),
-    // @ts-ignore
     cell: ({ row }) =>
-      dateCell(new Date(row.getValue('date')), new Date(row.original.startTime), new Date(row.original.endTime)),
+      dateCell(new Date(row.getValue<string>('date')), new Date(row.original.startTime), new Date(row.original.endTime)),
   },
   {
     accessorKey: 'content',
-    header: ({ column }) => header(column, 'Content'),
-    cell: ({ row }) => cell(row.getValue('content')),
+    header: () => header('Content'),
+    cell: ({ row }) => cell(row.getValue<string | undefined>('content')),
   },
 ]
